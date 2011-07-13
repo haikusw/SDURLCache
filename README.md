@@ -15,6 +15,14 @@ that's it, you instantly give on-disk HTTP request caching capability to your ap
     [NSURLCache setSharedURLCache:urlCache];
     [urlCache release];
 
+If you want to use your own path, note contrary to the NSURLCache documentation, this must be a full path
+and should almost certainly be in your application sandbox's Cache directory.
+
+    NSArray * paths = NSSearchPathForDirectoriesInDomains( NSCachesDirectory, NSUserDomainMask, YES );
+    NSString * cacheDirPath = [[paths objectAtIndex: 0] stringByAppendingPathComponent: @"MyCacheFolder"];
+
+then pass `cacheDirPath` as the `diskPath:` parameter of `initWithMemoryCapacity:diskCapacity:diskPath:`
+
 To save flash drive, SDURLCache doesn't cache on disk responses if cache expiration delay is lower
 than 5 minutes by default. You can change this behavior by changing the `minCacheInterval` property.
 
