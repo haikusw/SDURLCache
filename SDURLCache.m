@@ -420,6 +420,9 @@ static NSDateFormatter* CreateDateFormatter(NSString *format)
 
 #pragma mark NSURLCache
 
+// NOTE:  diskPath needs to be a full path on iOS despite what the NSURLCache documentation states.
+// see defaultCachePath above for code to get the application sandbox Caches directory.
+
 - (id)initWithMemoryCapacity:(NSUInteger)memoryCapacity diskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path
 {
     if ((self = [super initWithMemoryCapacity:memoryCapacity diskCapacity:diskCapacity diskPath:path]))
