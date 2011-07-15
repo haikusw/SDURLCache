@@ -9,6 +9,14 @@
 #import "SDURLCache.h"
 #import <CommonCrypto/CommonDigest.h>
 
+#ifndef dNSLog
+    #if defined(DEBUG) && (DEBUG == 1)
+        #define dNSLog( a, var_args1... )		NSLog( a, ## var_args1 )
+    #else
+        #define dNSLog( a, var_args...)
+    #endif
+#endif
+
 static NSTimeInterval const kSDURLCacheInfoDefaultMinCacheInterval = 5 * 60; // 5 minute
 static NSString *const kSDURLCacheInfoFileName = @"cacheInfo.plist";
 static NSString *const kSDURLCacheInfoDiskUsageKey = @"diskUsage";
@@ -438,6 +446,18 @@ static NSDateFormatter* CreateDateFormatter(NSString *format)
 	}
 
     return self;
+}
+
+- (void) setMemoryCapacity: (NSUInteger)memoryCapacity
+{
+    if ( memoryCapacity == 0 )
+    {
+        dNSLog(@"ignoring request to set memory cache to 0");
+        return;     // we are not going to set it to zero, this is a work around for what appears to be a bug with UIKit.
+                    // see http://stackoverflow.com/questions/6702678/how-to-set-the-caching-model-for-nsurlcache-uiwebview-in-ios
+    }
+    
+    [super setMemoryCapacity: memoryCapacity];    
 }
 
 - (void)storeCachedResponse:(NSCachedURLResponse *)cachedResponse forRequest:(NSURLRequest *)request
